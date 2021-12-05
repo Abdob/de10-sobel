@@ -227,10 +227,22 @@ HDMI_TX_AD7513 hdmi (
 			.READY           ( HDMI_READY )
  );
  
+wire [7:0]  GRAY;
+wire [7:0]  GRAY_R;
+wire [7:0]  GRAY_G;
+wire [7:0]  GRAY_B;
+
+RGB2GRAY	rgb2gray(
+			.R					(VGA_R),
+			.G					(VGA_G),
+			.B					(VGA_B),
+			.GRAY				(GRAY)
+);
+			
  
 //---VGA TIMG TO HDMI  ----  
 assign HDMI_TX_CLK =   VGA_CLK;
-assign HDMI_TX_D   = TX_DE? { VGA_R, VGA_G, VGA_B  }  :0 ;  
+assign HDMI_TX_D   = TX_DE? { GRAY, GRAY, GRAY  }  :0 ;  
 assign HDMI_TX_DE  = READ_Request;           
 assign HDMI_TX_HS  = VGA_HS                 ;
 assign HDMI_TX_VS  = VGA_VS                 ;

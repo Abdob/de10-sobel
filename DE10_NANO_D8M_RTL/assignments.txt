@@ -232,5 +232,11 @@ set_global_assignment -name VERILOG_FILE V_Auto/CLOCKMEM.v
 set_global_assignment -name VERILOG_FILE V_Auto/AUTO_SYNC_MODIFY.v
 set_global_assignment -name VERILOG_FILE V_Auto/AUTO_FOCUS_ON.v
 set_global_assignment -name VERILOG_FILE VGA_Controller/VGA_Controller.v
-set_global_assignment -name VERILOG_FILE V_IMGPROC/RGB2GRAY.v
+#set_global_assignment -name VERILOG_FILE V_IMGPROC/RGB2GRAY.v
+#set_global_assignment -name VERILOG_FILE V_IMGPROC/SOBEL.v
+set_global_assignment -name VHDL_FILE V_IMGPROC/to_grayscale.vhd
+set_global_assignment -name VHDL_FILE V_IMGPROC/sobel.vhd
+set_global_assignment -name VHDL_FILE V_IMGPROC/fifo.vhd
+set_global_assignment -name VHDL_FILE V_IMGPROC/edge_detect_top.vhd
+set_global_assignment -name VHDL_FILE V_IMGPROC/edge_detect.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

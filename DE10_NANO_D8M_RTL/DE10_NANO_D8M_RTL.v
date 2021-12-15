@@ -227,22 +227,33 @@ HDMI_TX_AD7513 hdmi (
 			.READY           ( HDMI_READY )
  );
  
-wire [7:0]  GRAY;
-wire [7:0]  GRAY_R;
-wire [7:0]  GRAY_G;
-wire [7:0]  GRAY_B;
+ wire IN_full;
+ wire IN_wr_en;
+ wire OUT_empty;
+ wire OUT_rd_en;
+ wire [7:0] OUT_dout;
 
-RGB2GRAY	rgb2gray(
-			.R					(VGA_R),
-			.G					(VGA_G),
-			.B					(VGA_B),
-			.GRAY				(GRAY)
-);
-			
+ edge_detect_top vhdl_design
+ (
+	 .clock_25 (HDMI_TX_CLK),
+	 .clock_50 (FPGA_CLK1_50),
+	 .reset (RESET_N),
+	 .fifo_in_full (IN_full),
+	 .fifo_in_wr_en (IN_wr_en),
+	 .fifo_in_din ({VGA_R, VGA_G, VGA_B}),
+	 .fifo_out_rd_en (OUT_rd_en),
+	 .fifo_out_empty (OUT_empty),
+	 .fifo_out_dout (OUT_dout)
+ );
+
+assign IN_wr_en = IN_full ? 1'b0 : 1'b1;
+assign OUT_rd_en = OUT_empty ? 1'b0 : 1'b1;
+
  
 //---VGA TIMG TO HDMI  ----  
 assign HDMI_TX_CLK =   VGA_CLK;
-assign HDMI_TX_D   = TX_DE? { GRAY, GRAY, GRAY  }  :0 ;  
+assign HDMI_TX_D = TX_DE ? (SW[1] ? {OUT_dout, OUT_dout, OUT_dout} : { VGA_R, VGA_G, VGA_B  }) :  0;
+//assign HDMI_TX_D   = TX_DE? { VGA_R, VGA_G, VGA_B  }  :0 ;  
 assign HDMI_TX_DE  = READ_Request;           
 assign HDMI_TX_HS  = VGA_HS                 ;
 assign HDMI_TX_VS  = VGA_VS                 ;
